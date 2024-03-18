@@ -1,15 +1,24 @@
-from datetime import datetime
+import calendar
 import importlib
+from datetime import datetime
 
 from commits import save_tasks
 from docs import create_documents
 
+YEAR = 2024
+MONTH = 1
+
 
 def main():
-    MONTH = 12
-
-    start = datetime(2023, MONTH, 1)
-    end = datetime(2023, MONTH, 30).replace(hour=23, minute=59, second=59)
+    start = datetime(YEAR, MONTH, 1)
+    end = datetime(
+        YEAR,
+        MONTH,
+        calendar.monthrange(YEAR, MONTH)[1],
+        hour=23,
+        minute=59,
+        second=59
+    )
     save_tasks(start, end)
 
     tasks_module = importlib.import_module(f'tasks.t_{MONTH}_2023')
