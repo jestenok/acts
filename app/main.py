@@ -6,7 +6,7 @@ from commits import save_tasks
 from docs import create_documents
 
 YEAR = 2024
-MONTH = 1
+MONTH = 2
 
 
 def main():

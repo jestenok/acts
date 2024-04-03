@@ -65,7 +65,7 @@ def create_act(creds: dict, org: str, tasks: str, month: str):
 
     _ = d.add_paragraph(f'''
         1.Исполнителем оказаны следующие услуги:
-            {tasks}
+            {tasks.replace('. ', '.\n').replace('\n', '\n                ')}
         2. Вознаграждение Исполнителя составляет ____,__ (_____ рублей, __ копеек)
 
         3. Стороны не имеют претензий друг к другу.
@@ -153,7 +153,8 @@ def create_tz(creds: dict, org: str, todo: str, month: str):
     r.bold = True
 
     _ = d.add_paragraph(f'''Задание: 
-        {todo}
+        {todo.replace('. ', '.\n').replace('\n', '\n            ')}
+
         ИТОГО:  стоимость услуг составит  ____,__ (_____ рублей __ копеек)
         ''')
 

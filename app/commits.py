@@ -41,7 +41,7 @@ def get_tasks(start, end) -> str:
 
     res = ['done = {']
     for org, org_group in df.groupby('Организация'):
-        res.append(f"""{org}: '''""")
+        res.append(f"""'{org}': '''""")
         for service, service_group in org_group.groupby('Сервис'):
             res.append(f'{service}: ')
             for task in service_group['Задача']:
