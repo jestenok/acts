@@ -9,8 +9,7 @@ from settings import BLACK_WORDS, ORG_DIR_SERVICE
 def _get_tasks_df(start, end) -> pd.DataFrame:
     path = os.path.dirname(os.getcwd())
 
-    df = pd.DataFrame(columns=['Организация', 'Сервис', 'Задача'])
-
+    res = []
     for org, dir_service in ORG_DIR_SERVICE.items():
         for service_dir, service in dir_service:
             directory = os.path.join(path, service_dir)
@@ -19,7 +18,7 @@ def _get_tasks_df(start, end) -> pd.DataFrame:
                 commits_last_month = list(repo.iter_commits(since=start, until=end))
                 for c in commits_last_month:
                     msg = c.message
-                    msg = msg.replace('\n', ' ')
+                    msg = msg.replace('\n', ' ').replace('/', '')
 
                     if msg.split(' ')[0].lower() in BLACK_WORDS:
                         continue
@@ -30,8 +29,9 @@ def _get_tasks_df(start, end) -> pd.DataFrame:
                     if msg.split(':')[0].lower() in BLACK_WORDS:
                         continue
 
-                    df.loc[len(df)] = [org, service, msg]
+                    res.append((org, service, msg))
 
+    df = pd.DataFrame(res, columns=['Организация', 'Сервис', 'Задача'])
     df = df.drop_duplicates()
     return df
 
@@ -39,11 +39,11 @@ def _get_tasks_df(start, end) -> pd.DataFrame:
 def get_tasks(start, end) -> str:
     df = _get_tasks_df(start, end)
 
-    res = ['done_map = {']
+    res = ['done = {']
     for org, org_group in df.groupby('Организация'):
-        res.append(f"""'{org}': ''' """)
+        res.append(f"""{org}: '''""")
         for service, service_group in org_group.groupby('Сервис'):
-            res.append(f'{service}')
+            res.append(f'{service}: ')
             for task in service_group['Задача']:
                 res.append(f'    {task}')
         res.append("''',")
@@ -57,6 +57,6 @@ def save_tasks(start, end):
     if os.path.exists(file_name):
         print(f'File {file_name} already exists')
         return
-    with open(file_name, 'w') as f:
+    with open(file_name, 'w', encoding='utf-8') as f:
         text = get_tasks(start, end)
         f.write(text)

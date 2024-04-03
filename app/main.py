@@ -21,7 +21,7 @@ def main():
     )
     save_tasks(start, end)
 
-    tasks_module = importlib.import_module(f'tasks.t_{MONTH}_2023')
+    tasks_module = importlib.import_module(f'tasks.t_{start.strftime('%m_%Y')}')
     for org, tasks in tasks_module.done.items():
         create_documents(org, tasks, tasks_module.todo[org], MONTH)
 

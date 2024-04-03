@@ -1,3 +1,5 @@
+import datetime
+
 from docx import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Pt
@@ -21,7 +23,13 @@ def set_default_style(document):
 
 def create_documents(org: str, tasks: str, todo: str, month: int):
     creds = ORG_CREDS[org]
+    month = datetime.date(day=1, month=month, year=2024).strftime("%m")
 
+    create_act(creds, org, tasks, month)
+    create_tz(creds, org, todo, month)
+
+
+def create_act(creds: dict, org: str, tasks: str, month: str):
     d = Document()
     set_default_style(d)
 
@@ -52,18 +60,20 @@ def create_documents(org: str, tasks: str, todo: str, month: int):
     r = p.add_run('ИП Тайгунов Камиль Наильевич, ')
     r.bold = True
 
-    _ = p.add_run(f'''именуемый в дальнейшем «Исполнитель», с другой стороны, вместе именуемые «Стороны», составили настоящий акт (далее - Акт) к договору оказания услуг №{creds['contract_number']} от {creds['contract_date']}, техническое задание №б/н от 01.{month}.2023 г.:)
+    _ = p.add_run(
+        f'''именуемый в дальнейшем «Исполнитель», с другой стороны, вместе именуемые «Стороны», составили настоящий акт (далее - Акт) к договору оказания услуг №{creds['contract_number']} от {creds['contract_date']}, техническое задание №б/н от 01.{month}.2023 г.:)''')
 
-    1.Исполнителем оказаны следующие услуги:
-        {tasks}
-    2. Вознаграждение Исполнителя составляет ____,__ (_____ рублей, __ копеек)
+    _ = d.add_paragraph(f'''
+        1.Исполнителем оказаны следующие услуги:
+            {tasks}
+        2. Вознаграждение Исполнителя составляет ____,__ (_____ рублей, __ копеек)
 
-    3. Стороны не имеют претензий друг к другу.
+        3. Стороны не имеют претензий друг к другу.
 
-  4. Акт составлен и подписан в двух экземплярах, имеющих одинаковую юридическую силу, по одному для каждой из Сторон.
+      4. Акт составлен и подписан в двух экземплярах, имеющих одинаковую юридическую силу, по одному для каждой из Сторон.
 
-    5. Подписи сторон:
-    ''')
+        5. Подписи сторон:
+        ''')
 
     t = d.add_table(rows=3, cols=2)
     t.style = 'Table Grid'
@@ -104,8 +114,8 @@ def create_documents(org: str, tasks: str, todo: str, month: int):
 
     d.save(f'''{SAVE_FOLDER}/01.{month}.2023 {org} акт.docx''')
 
-    '''----------------------------------------------------'''
 
+def create_tz(creds: dict, org: str, todo: str, month: str):
     d = Document()
     set_default_style(d)
 
@@ -128,13 +138,14 @@ def create_documents(org: str, tasks: str, todo: str, month: int):
     r = p.add_run(f'''{creds['full_name']}, ''')
     r.bold = True
 
-    _ = p.add_run(f'''именуемое в дальнейшем «Заказчик», в {creds['directors_position_whos']} {creds['director_whos']}, действующего на основании Устава и Договора, с одной стороны и ''')
+    _ = p.add_run(
+        f'''именуемое в дальнейшем «Заказчик», в {creds['directors_position_whos']} {creds['director_whos']}, действующего на основании Устава и Договора, с одной стороны и ''')
 
     r = p.add_run('ИП Тайгунов Камиль Наильевич, ')
     r.bold = True
 
     _ = p.add_run('''именуемый в дальнейшем «Исполнитель», с другой стороны, вместе именуемые «Стороны», утвердили техническое задание в следующей редакции:
-    ''')
+        ''')
 
     p = d.add_paragraph('Исполнитель обязуется оказать следующие услуги/работы:')
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -142,10 +153,9 @@ def create_documents(org: str, tasks: str, todo: str, month: int):
     r.bold = True
 
     _ = d.add_paragraph(f'''Задание: 
-    {todo}
-
-    ИТОГО:  стоимость услуг составит  ____,__ (_____ рублей __ копеек)
-    ''')
+        {todo}
+        ИТОГО:  стоимость услуг составит  ____,__ (_____ рублей __ копеек)
+        ''')
 
     p = d.add_paragraph('Подписи сторон:')
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -190,4 +200,3 @@ def create_documents(org: str, tasks: str, todo: str, month: int):
     _ = c.add_paragraph('________________ Тайгунов К.Н')
 
     d.save(f'''{SAVE_FOLDER}/01.{month}.2023 {org} тз.docx''')
-
