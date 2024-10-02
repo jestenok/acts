@@ -21,7 +21,7 @@ def set_default_style(document):
     default_style.paragraph_format.space_after = Pt(0)
 
 
-def create_documents(org: str, tasks: str, todo: str, month: int):
+def create_documents(org: str, tasks: dict, todo: dict, month: int):
     creds = ORG_CREDS[org]
     month = datetime.date(day=1, month=month, year=2024).strftime("%m")
 
@@ -29,7 +29,7 @@ def create_documents(org: str, tasks: str, todo: str, month: int):
     create_tz(creds, org, todo, month)
 
 
-def create_act(creds: dict, org: str, tasks: str, month: str):
+def create_act(creds: dict, org: str, tasks: dict, month: str):
     d = Document()
     set_default_style(d)
 
@@ -43,7 +43,7 @@ def create_act(creds: dict, org: str, tasks: str, month: str):
     r = p.runs[0]
     r.bold = True
 
-    _ = d.add_paragraph('г. Москва' + ' ' * 125 + f'«30» {MONTH_NUMBER_MAP[month]} 2023 г.')
+    _ = d.add_paragraph('г. Москва' + ' ' * 125 + f'«30» {MONTH_NUMBER_MAP[month]} 2024 г.')
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
     _ = d.add_paragraph()
@@ -61,11 +61,18 @@ def create_act(creds: dict, org: str, tasks: str, month: str):
     r.bold = True
 
     _ = p.add_run(
-        f'''именуемый в дальнейшем «Исполнитель», с другой стороны, вместе именуемые «Стороны», составили настоящий акт (далее - Акт) к договору оказания услуг №{creds['contract_number']} от {creds['contract_date']}, техническое задание №б/н от 01.{month}.2023 г.:)''')
+        f'''именуемый в дальнейшем «Исполнитель», с другой стороны, вместе именуемые «Стороны», составили настоящий акт (далее - Акт) к договору оказания услуг №{creds['contract_number']} от {creds['contract_date']}, техническое задание №б/н от 01.{month}.2024 г.:)''')
 
     _ = d.add_paragraph(f'''
         1.Исполнителем оказаны следующие услуги:
-            {tasks.replace('. ', '.\n').replace('\n', '\n                ')}
+    ''')
+
+    for k, v in tasks.items():
+        _ = d.add_paragraph(f'    {k}')
+        for i in v:
+            _ = d.add_paragraph(f'        - {i}')
+
+    _ = d.add_paragraph(f'''
         2. Вознаграждение Исполнителя составляет ____,__ (_____ рублей, __ копеек)
 
         3. Стороны не имеют претензий друг к другу.
@@ -112,10 +119,10 @@ def create_act(creds: dict, org: str, tasks: str, month: str):
     c.add_paragraph()
     _ = c.add_paragraph('________________ Тайгунов К.Н')
 
-    d.save(f'''{SAVE_FOLDER}/01.{month}.2023 {org} акт.docx''')
+    d.save(f'''{SAVE_FOLDER}/01.{month}.2024 {org} акт.docx''')
 
 
-def create_tz(creds: dict, org: str, todo: str, month: str):
+def create_tz(creds: dict, org: str, todo: dict, month: str):
     d = Document()
     set_default_style(d)
 
@@ -128,7 +135,7 @@ def create_tz(creds: dict, org: str, todo: str, month: str):
     )
     p.alignment = WD_ALIGN_PARAGRAPH.RIGHT
 
-    p = d.add_paragraph(f'Техническое задание №б/н от 01.{month}.2023 г.')
+    p = d.add_paragraph(f'Техническое задание №б/н от 01.{month}.2024 г.')
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     r = p.runs[0]
     r.bold = True
@@ -152,11 +159,14 @@ def create_tz(creds: dict, org: str, todo: str, month: str):
     r = p.runs[0]
     r.bold = True
 
-    _ = d.add_paragraph(f'''Задание: 
-        {todo.replace('. ', '.\n').replace('\n', '\n            ')}
+    _ = d.add_paragraph('Задание:')
 
-        ИТОГО:  стоимость услуг составит  ____,__ (_____ рублей __ копеек)
-        ''')
+    for k, v in todo.items():
+        _ = d.add_paragraph(k)
+        for i in v:
+            _ = d.add_paragraph(f'    - {i}')
+
+    _ = d.add_paragraph('\nИТОГО:  стоимость услуг составит  ____,__ (_____ рублей __ копеек)\n')
 
     p = d.add_paragraph('Подписи сторон:')
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -200,4 +210,4 @@ def create_tz(creds: dict, org: str, todo: str, month: str):
     c.add_paragraph()
     _ = c.add_paragraph('________________ Тайгунов К.Н')
 
-    d.save(f'''{SAVE_FOLDER}/01.{month}.2023 {org} тз.docx''')
+    d.save(f'''{SAVE_FOLDER}/01.{month}.2024 {org} тз.docx''')

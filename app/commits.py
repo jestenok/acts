@@ -36,27 +36,10 @@ def _get_tasks_df(start, end) -> pd.DataFrame:
     return df
 
 
-def get_tasks(start, end) -> str:
-    df = _get_tasks_df(start, end)
-
-    res = ['done = {']
-    for org, org_group in df.groupby('Организация'):
-        res.append(f"""'{org}': '''""")
-        for service, service_group in org_group.groupby('Сервис'):
-            res.append(f'{service}: ')
-            for task in service_group['Задача']:
-                res.append(f'    {task}')
-        res.append("''',")
-    res.append('}')
-
-    return '\n'.join(res)
-
-
 def save_tasks(start, end):
-    file_name = f'app/tasks/{start.strftime("t_%m_%Y")}.py'
+    file_name = f'app/tasks/{start.strftime("t_%m_%Y")}.csv'
     if os.path.exists(file_name):
         print(f'File {file_name} already exists')
         return
-    with open(file_name, 'w', encoding='utf-8') as f:
-        text = get_tasks(start, end)
-        f.write(text)
+    df = _get_tasks_df(start, end)
+    df.to_csv(file_name, index=False)

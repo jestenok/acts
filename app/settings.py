@@ -1,4 +1,4 @@
-SAVE_FOLDER = 'C:/Users/Jestenok/Documents/work/acts/data'
+SAVE_FOLDER = 'D:/Projects/acts/data'
 
 
 MONTH_NUMBER_MAP = {
@@ -27,6 +27,16 @@ ORG_CREDS = {
         'contract_number': '0109/1',
         'contract_date': '01.09.2023',
     },
+    'ГДД': {
+        'name': 'ООО «Гоффштейн Дентал Девелопмент» ',
+        'full_name': 'Общество с ограниченной ответственность «Гоффштейн Дентал Девелопмент»',
+        'inn': '9702049490 ',
+        'director': 'Гофштейн Евгений Владимирович',
+        'director_whos': 'Гофштейна Евгения Владимировича',
+        'directors_position_whos': 'генерального директора',
+        'contract_number': '270424',
+        'contract_date': '27.04.2024',
+    },
     'ГЭ': {
         'name': 'ООО «Геософт Эндолайн»',
         'full_name': 'Общество с ограниченной ответственностью «Геософт Эндолайн»',
@@ -50,7 +60,7 @@ ORG_CREDS = {
 }
 
 ORG_DIR_SERVICE = {
-    'ГЭ': [
+    'ГДД': [
         # ['internal-client', 'Внутренний клиент'],
         ['salary', 'Сервис расчета зарплаты'],
         ['dash', 'Сервис дашбордов'],
