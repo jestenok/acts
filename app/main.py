@@ -2,11 +2,13 @@ import calendar
 import importlib
 from datetime import datetime
 
+import pandas as pd
+
 from commits import save_tasks
 from docs import create_documents
 
-YEAR = 2024
-MONTH = 9
+YEAR = 2025
+MONTH = 3
 
 
 def main():
@@ -19,11 +21,19 @@ def main():
         minute=59,
         second=59
     )
-    save_tasks(start, end)
+    file_name_dones = f'app/dones/{start.strftime("t_%m_%Y")}.csv'
+    save_tasks(start, end, file_name_dones)
 
-    tasks_module = importlib.import_module(f'tasks.t_{start.strftime('%m_%Y')}')
-    for org, tasks in tasks_module.done.items():
-        create_documents(org, tasks, tasks_module.todo[org], MONTH)
+    dones = pd.read_csv(file_name_dones)
+    tasks = pd.read_csv(file_name_dones.replace('dones', 'tasks'))
+    for org in tasks['Организация'].unique():
+        tasks_org = tasks[tasks['Организация'] == org]
+        dones_org = dones[dones['Организация'] == org]
+
+        tasks_dict = tasks_org.groupby('Сервис')['Задача'].apply(list).to_dict()
+        dones_dict = dones_org.groupby('Сервис')['Задача'].apply(list).to_dict()
+
+        create_documents(org, tasks_dict, dones_dict, MONTH)
 
 
 if __name__ == "__main__":

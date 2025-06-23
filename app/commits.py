@@ -15,7 +15,11 @@ def _get_tasks_df(start, end) -> pd.DataFrame:
             directory = os.path.join(path, service_dir)
             if directory:
                 repo = Repo(directory)
-                commits_last_month = list(repo.iter_commits(since=start, until=end))
+                if service_dir == 'salary':
+                    branch = repo.heads.test
+                else:
+                    branch = repo.active_branch
+                commits_last_month = list(repo.iter_commits(branch, since=start, until=end))
                 for c in commits_last_month:
                     msg = c.message
                     msg = msg.replace('\n', ' ').replace('/', '')
@@ -36,8 +40,7 @@ def _get_tasks_df(start, end) -> pd.DataFrame:
     return df
 
 
-def save_tasks(start, end):
-    file_name = f'app/tasks/{start.strftime("t_%m_%Y")}.csv'
+def save_tasks(start, end, file_name):
     if os.path.exists(file_name):
         print(f'File {file_name} already exists')
         return
