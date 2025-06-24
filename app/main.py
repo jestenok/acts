@@ -9,6 +9,7 @@ from docs import create_documents
 
 YEAR = 2025
 MONTH = 4
+PERSON = 'Kamil Taigunov'
 
 
 def main():
@@ -21,7 +22,7 @@ def main():
         minute=59,
         second=59
     )
-    file_name_dones = f'app/dones/{start.strftime("t_%m_%Y")}.csv'
+    file_name_dones = f'{PERSON}/dones/{start.strftime("t_%m_%Y")}.csv'
     save_tasks(start, end, file_name_dones)
 
     dones = pd.read_csv(file_name_dones)
@@ -33,7 +34,7 @@ def main():
         tasks_dict = tasks_org.groupby('Сервис')['Задача'].apply(list).to_dict()
         dones_dict = dones_org.groupby('Сервис')['Задача'].apply(list).to_dict()
 
-        create_documents(org, tasks_dict, dones_dict, MONTH)
+        create_documents(org, tasks_dict, dones_dict, MONTH, PERSON)
 
 
 if __name__ == "__main__":

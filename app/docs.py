@@ -1,10 +1,11 @@
 import datetime
+import os
 
 from docx import Document
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.shared import Pt
 
-from settings import ORG_CREDS, MONTH_NUMBER_MAP, SAVE_FOLDER
+from settings import ORG_CREDS, MONTH_NUMBER_MAP, EMP_CREDS
 
 
 def set_default_style(document):
@@ -21,15 +22,19 @@ def set_default_style(document):
     default_style.paragraph_format.space_after = Pt(0)
 
 
-def create_documents(org: str, tasks: dict, dones: dict, month: int):
-    creds = ORG_CREDS[org]
+def create_documents(org: str, tasks: dict, dones: dict, month: int, emp: str):
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    save_folder = os.path.join(base_dir, emp, 'data')
+
+    creds = ORG_CREDS[emp][org]
     month = datetime.date(day=1, month=month, year=2025).strftime("%m")
+    emp_creds = EMP_CREDS[emp]
 
-    create_act(creds, org, dones, month)
-    create_tz(creds, org, tasks, month)
+    create_act(creds, org, dones, month, emp_creds, save_folder)
+    create_tz(creds, org, tasks, month, emp_creds, save_folder)
 
 
-def create_act(creds: dict, org: str, tasks: dict, month: str):
+def create_act(creds: dict, org: str, tasks: dict, month: str, emp_creds: dict, save_folder: str):
     d = Document()
     set_default_style(d)
 
@@ -57,7 +62,7 @@ def create_act(creds: dict, org: str, tasks: dict, month: str):
     _ = p.add_run(
         f''' именуемое в дальнейшем «Заказчик», в {creds['directors_position_whos']} {creds['director_whos']}, действующего на основании Устава и Договора, с одной стороны и ''')
 
-    r = p.add_run('ИП Тайгунов Камиль Наильевич, ')
+    r = p.add_run(f'{emp_creds["org_full"]}, ')
     r.bold = True
 
     _ = p.add_run(
@@ -105,8 +110,8 @@ def create_act(creds: dict, org: str, tasks: dict, month: str):
     c = t.cell(1, 1)
     p = c.paragraphs[0]
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    _ = p.add_run('ИП Тайгунов К.Н.')
-    p = c.add_paragraph('ИНН 026615235642')
+    _ = p.add_run(f'{emp_creds["org"]}')
+    p = c.add_paragraph(f'ИНН {emp_creds["inn"]}')
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
     c = t.cell(2, 0)
@@ -117,12 +122,12 @@ def create_act(creds: dict, org: str, tasks: dict, month: str):
 
     c = t.cell(2, 1)
     c.add_paragraph()
-    _ = c.add_paragraph('________________ Тайгунов К.Н')
+    _ = c.add_paragraph(f'________________ {emp_creds["name"]}')
 
-    d.save(f'''{SAVE_FOLDER}/01.{month}.2025 {org} акт.docx''')
+    d.save(f'''{save_folder}/01.{month}.2025 {org} акт.docx''')
 
 
-def create_tz(creds: dict, org: str, todo: dict, month: str):
+def create_tz(creds: dict, org: str, todo: dict, month: str, emp_creds: dict, save_folder: str):
     d = Document()
     set_default_style(d)
 
@@ -148,7 +153,7 @@ def create_tz(creds: dict, org: str, todo: dict, month: str):
     _ = p.add_run(
         f'''именуемое в дальнейшем «Заказчик», в {creds['directors_position_whos']} {creds['director_whos']}, действующего на основании Устава и Договора, с одной стороны и ''')
 
-    r = p.add_run('ИП Тайгунов Камиль Наильевич, ')
+    r = p.add_run(f'{emp_creds["org_full"]}, ')
     r.bold = True
 
     _ = p.add_run('''именуемый в дальнейшем «Исполнитель», с другой стороны, вместе именуемые «Стороны», утвердили техническое задание в следующей редакции:
@@ -196,8 +201,8 @@ def create_tz(creds: dict, org: str, todo: dict, month: str):
     c = t.cell(1, 1)
     p = c.paragraphs[0]
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
-    _ = p.add_run('ИП Тайгунов К.Н.')
-    p = c.add_paragraph('ИНН 026615235642')
+    _ = p.add_run(f'{emp_creds["org"]}')
+    p = c.add_paragraph(f'ИНН {emp_creds["inn"]}')
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
     c = t.cell(2, 0)
@@ -208,6 +213,6 @@ def create_tz(creds: dict, org: str, todo: dict, month: str):
 
     c = t.cell(2, 1)
     c.add_paragraph()
-    _ = c.add_paragraph('________________ Тайгунов К.Н')
+    _ = c.add_paragraph(f'________________ {emp_creds["name"]}')
 
-    d.save(f'''{SAVE_FOLDER}/01.{month}.2025 {org} тз.docx''')
+    d.save(f'''{save_folder}/01.{month}.2025 {org} тз.docx''')

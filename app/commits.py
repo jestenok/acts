@@ -7,7 +7,7 @@ from settings import BLACK_WORDS, ORG_DIR_SERVICE
 
 
 def _get_tasks_df(start, end) -> pd.DataFrame:
-    path = os.path.dirname(os.getcwd())
+    path = os.path.dirname(os.path.dirname(os.getcwd()))
 
     res = []
     for org, dir_service in ORG_DIR_SERVICE.items():
@@ -16,7 +16,7 @@ def _get_tasks_df(start, end) -> pd.DataFrame:
             if directory:
                 repo = Repo(directory)
                 if service_dir == 'salary':
-                    branch = repo.heads.test
+                    branch = repo.heads.main
                 else:
                     branch = repo.active_branch
                 commits_last_month = list(repo.iter_commits(branch, since=start, until=end))
