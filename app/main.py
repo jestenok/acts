@@ -32,8 +32,12 @@ def main():
         tasks_org = tasks[tasks['Организация'] == org]
         dones_org = dones[dones['Организация'] == org]
 
-        tasks_dict = tasks_org.groupby('Сервис')['Задача'].apply(list).to_dict()
-        dones_dict = dones_org.groupby('Сервис')['Задача'].apply(list).to_dict()
+        tasks_dict = tasks_org.groupby('Сервис')[['Задача', 'Время']].apply(
+            lambda df: list(zip(df['Задача'], df['Время']))
+        ).to_dict()
+        dones_dict = dones_org.groupby('Сервис')[['Задача', 'Время']].apply(
+            lambda df: list(zip(df['Задача'], df['Время']))
+        ).to_dict()
 
         create_documents(org, tasks_dict, dones_dict, MONTH, PERSON)
 

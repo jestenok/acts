@@ -1,5 +1,6 @@
 import os
 
+import numpy as np
 import pandas as pd
 from git import Repo
 
@@ -37,6 +38,14 @@ def _get_tasks_df(start, end, emp, author=None) -> pd.DataFrame:
 
     df = pd.DataFrame(res, columns=['Организация', 'Сервис', 'Задача'])
     df = df.drop_duplicates()
+
+    df['Время'] = 1
+    amount = 80 - df.shape[0]
+
+    if amount > 0 and not df.empty:
+        distribution = np.random.multinomial(amount, [1 / len(df)] * len(df))
+        df['Время'] += distribution
+
     return df
 
 
