@@ -64,7 +64,7 @@ ORG_CREDS = {
             'director': 'Гофштейн Евгений Владимирович',
             'director_whos': 'Гофштейна Евгения Владимировича',
             'directors_position_whos': 'генерального директора',
-            'contract_number': '',
+            'contract_number': ' №б/н',
             'contract_date': '28.04.2025',
         }
 
