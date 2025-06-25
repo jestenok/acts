@@ -30,8 +30,11 @@ def main():
         file_name_dones = f'{name}/dones/{start.strftime("t_%m_%Y")}.csv'
         save_tasks(start, end, file_name_dones, name, email)
 
+        file_name_tasks = file_name_dones.replace('dones', 'tasks')
+        save_tasks(start, end, file_name_tasks, name, email)
+
         dones = pd.read_csv(file_name_dones)
-        tasks = pd.read_csv(file_name_dones.replace('dones', 'tasks'))
+        tasks = pd.read_csv(file_name_tasks)
         for org in tasks['Организация'].unique():
             tasks_org = tasks[tasks['Организация'] == org]
             dones_org = dones[dones['Организация'] == org]

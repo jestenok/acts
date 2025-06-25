@@ -147,5 +147,4 @@ BLACK_WORDS = [
 PERSONS = [
     {"name": "Osip Sorokin", "email": "kim2337334@gmail.com"},
     {"name": "Kamil Taigunov", "email": "jestenok@gmail.com"},
-
 ]
