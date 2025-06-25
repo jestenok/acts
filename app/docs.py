@@ -132,10 +132,10 @@ def create_tz(creds: dict, org: str, todo: dict, month: str, emp_creds: dict, sa
     set_default_style(d)
 
     p = d.add_paragraph(
-        '''
+        f'''
         Приложение № 1
         к договору №б/н
-        от «04» апреля 2022 г.
+        от {emp_creds['date']}
         '''
     )
     p.alignment = WD_ALIGN_PARAGRAPH.RIGHT
