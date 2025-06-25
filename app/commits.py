@@ -6,11 +6,11 @@ from git import Repo
 from settings import BLACK_WORDS, ORG_DIR_SERVICE
 
 
-def _get_tasks_df(start, end) -> pd.DataFrame:
+def _get_tasks_df(start, end, emp, author=None) -> pd.DataFrame:
     path = os.path.dirname(os.path.dirname(os.getcwd()))
 
     res = []
-    for org, dir_service in ORG_DIR_SERVICE.items():
+    for org, dir_service in ORG_DIR_SERVICE[emp].items():
         for service_dir, service in dir_service:
             directory = os.path.join(path, service_dir)
             if directory:
@@ -19,7 +19,7 @@ def _get_tasks_df(start, end) -> pd.DataFrame:
                     branch = repo.heads.main
                 else:
                     branch = repo.active_branch
-                commits_last_month = list(repo.iter_commits(branch, since=start, until=end))
+                commits_last_month = list(repo.iter_commits(branch, since=start, until=end, author=author))
                 for c in commits_last_month:
                     msg = c.message
                     msg = msg.replace('\n', ' ').replace('/', '')
@@ -40,10 +40,10 @@ def _get_tasks_df(start, end) -> pd.DataFrame:
     return df
 
 
-def save_tasks(start, end, file_name):
+def save_tasks(start, end, file_name, emp, author=None):
     if os.path.exists(file_name):
         print(f'File {file_name} already exists')
         return
-    df = _get_tasks_df(start, end)
+    df = _get_tasks_df(start, end, emp, author=author)
     df.to_csv(file_name, index=False)
 

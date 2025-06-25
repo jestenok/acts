@@ -8,8 +8,9 @@ from commits import save_tasks
 from docs import create_documents
 
 YEAR = 2025
-MONTH = 4
-PERSON = 'Kamil Taigunov'
+MONTH = 5
+PERSON = 'Osip Sorokin'
+EMAIL = 'kim2337334@gmail.com'
 
 
 def main():
@@ -23,7 +24,7 @@ def main():
         second=59
     )
     file_name_dones = f'{PERSON}/dones/{start.strftime("t_%m_%Y")}.csv'
-    save_tasks(start, end, file_name_dones)
+    save_tasks(start, end, file_name_dones, PERSON, EMAIL)
 
     dones = pd.read_csv(file_name_dones)
     tasks = pd.read_csv(file_name_dones.replace('dones', 'tasks'))
