@@ -28,10 +28,10 @@ def main():
         email = person['email']
 
         file_name_dones = f'{name}/dones/{start.strftime("t_%m_%Y")}.csv'
-        save_tasks(start, end, file_name_dones, name, email)
+        # save_tasks(start, end, file_name_dones, name, email)
 
         file_name_tasks = file_name_dones.replace('dones', 'tasks')
-        save_tasks(start, end, file_name_tasks, name, email)
+        # save_tasks(start, end, file_name_tasks, name, email)
 
         dones = pd.read_csv(file_name_dones)
         tasks = pd.read_csv(file_name_tasks)
@@ -39,11 +39,11 @@ def main():
             tasks_org = tasks[tasks['Организация'] == org]
             dones_org = dones[dones['Организация'] == org]
 
-            tasks_dict = tasks_org.groupby('Сервис')[['Задача', 'Время']].apply(
-                lambda df: list(zip(df['Задача'], df['Время']))
+            tasks_dict = tasks_org.groupby('Сервис')[['Задача', 'Время', 'Пояснение']].apply(
+                lambda df: list(zip(df['Задача'], df['Время'], df['Пояснение']))
             ).to_dict()
-            dones_dict = dones_org.groupby('Сервис')[['Задача', 'Время']].apply(
-                lambda df: list(zip(df['Задача'], df['Время']))
+            dones_dict = dones_org.groupby('Сервис')[['Задача', 'Время', 'Пояснение']].apply(
+                lambda df: list(zip(df['Задача'], df['Время'], df['Пояснение']))
             ).to_dict()
 
             create_documents(org, tasks_dict, dones_dict, MONTH, name)

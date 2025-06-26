@@ -74,8 +74,8 @@ def create_act(creds: dict, org: str, tasks: dict, month: str, emp_creds: dict, 
 
     for k, v in tasks.items():
         _ = d.add_paragraph(f'    {k}')
-        for task, time in v:
-            _ = d.add_paragraph(f'        - {task} ({time} ч)')
+        for task, time, explanation in v:
+            _ = d.add_paragraph(f'        - {task} ({time} ч) — {explanation}')
 
     _ = d.add_paragraph(f'''
         2. Вознаграждение Исполнителя составляет ____,__ (_____ рублей, __ копеек)
@@ -168,8 +168,8 @@ def create_tz(creds: dict, org: str, todo: dict, month: str, emp_creds: dict, sa
 
     for k, v in todo.items():
         _ = d.add_paragraph(k)
-        for task, time in v:
-            _ = d.add_paragraph(f'        - {task} ({time} ч)')
+        for task, time, explanation in v:
+            _ = d.add_paragraph(f'        - {task} ({time} ч) — {explanation}')
 
     _ = d.add_paragraph('\nИТОГО:  стоимость услуг составит  ____,__ (_____ рублей __ копеек)\n')
 
