@@ -22,7 +22,7 @@ def set_default_style(document):
     default_style.paragraph_format.space_after = Pt(0)
 
 
-def create_documents(org: str, tasks: dict, dones: dict, month: int, emp: str):
+def create_documents(org: str, tasks: dict, dones: dict, month: int, emp: str, year: int = 2025):
     base_dir = os.path.dirname(os.path.abspath(__file__))
     save_folder = os.path.join(base_dir, emp, 'data')
 
@@ -30,11 +30,11 @@ def create_documents(org: str, tasks: dict, dones: dict, month: int, emp: str):
     month = datetime.date(day=1, month=month, year=2025).strftime("%m")
     emp_creds = EMP_CREDS[emp]
 
-    create_act(creds, org, dones, month, emp_creds, save_folder)
-    create_tz(creds, org, tasks, month, emp_creds, save_folder)
+    create_act(creds, org, dones, month, emp_creds, save_folder, year)
+    create_tz(creds, org, tasks, month, emp_creds, save_folder, year)
 
 
-def create_act(creds: dict, org: str, tasks: dict, month: str, emp_creds: dict, save_folder: str):
+def create_act(creds: dict, org: str, tasks: dict, month: str, emp_creds: dict, save_folder: str, year: int = 2025):
     d = Document()
     set_default_style(d)
 
@@ -48,7 +48,7 @@ def create_act(creds: dict, org: str, tasks: dict, month: str, emp_creds: dict, 
     r = p.runs[0]
     r.bold = True
 
-    _ = d.add_paragraph('г. Москва' + ' ' * 125 + f'«30» {MONTH_NUMBER_MAP[month]} 2025 г.')
+    _ = d.add_paragraph('г. Москва' + ' ' * 125 + f'«30» {MONTH_NUMBER_MAP[month]} {year} г.')
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
     _ = d.add_paragraph()
@@ -66,7 +66,7 @@ def create_act(creds: dict, org: str, tasks: dict, month: str, emp_creds: dict, 
     r.bold = True
 
     _ = p.add_run(
-        f'''именуемый в дальнейшем «Исполнитель», с другой стороны, вместе именуемые «Стороны», составили настоящий акт (далее - Акт) к договору оказания услуг №{creds['contract_number']} от {creds['contract_date']}, техническое задание №б/н от 01.{month}.2025 г.:)''')
+        f'''именуемый в дальнейшем «Исполнитель», с другой стороны, вместе именуемые «Стороны», составили настоящий акт (далее - Акт) к договору оказания услуг №{creds['contract_number']} от {creds['contract_date']}, техническое задание №б/н от 01.{month}.{year} г.:)''')
 
     _ = d.add_paragraph(f'''
         1.Исполнителем оказаны следующие услуги:
@@ -124,10 +124,10 @@ def create_act(creds: dict, org: str, tasks: dict, month: str, emp_creds: dict, 
     c.add_paragraph()
     _ = c.add_paragraph(f'________________ {emp_creds["name"]}')
 
-    d.save(f'''{save_folder}/01.{month}.2025 {org} акт.docx''')
+    d.save(f'''{save_folder}/01.{month}.{year} {org} акт.docx''')
 
 
-def create_tz(creds: dict, org: str, todo: dict, month: str, emp_creds: dict, save_folder: str):
+def create_tz(creds: dict, org: str, todo: dict, month: str, emp_creds: dict, save_folder: str, year: int = 2025):
     d = Document()
     set_default_style(d)
 
@@ -140,7 +140,7 @@ def create_tz(creds: dict, org: str, todo: dict, month: str, emp_creds: dict, sa
     )
     p.alignment = WD_ALIGN_PARAGRAPH.RIGHT
 
-    p = d.add_paragraph(f'Техническое задание №б/н от 01.{month}.2025 г.')
+    p = d.add_paragraph(f'Техническое задание №б/н от 01.{month}.{year} г.')
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     r = p.runs[0]
     r.bold = True
@@ -215,4 +215,4 @@ def create_tz(creds: dict, org: str, todo: dict, month: str, emp_creds: dict, sa
     c.add_paragraph()
     _ = c.add_paragraph(f'________________ {emp_creds["name"]}')
 
-    d.save(f'''{save_folder}/01.{month}.2025 {org} тз.docx''')
+    d.save(f'''{save_folder}/01.{month}.{year} {org} тз.docx''')

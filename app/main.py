@@ -8,8 +8,8 @@ from settings import PERSONS
 from commits import save_tasks
 from docs import create_documents
 
-YEAR = 2025
-MONTH = 12
+YEAR = 2026
+MONTH = 1
 
 
 def main():
@@ -45,7 +45,7 @@ def main():
                 lambda df: list(zip(df['Задача'], df['Время']))
             ).to_dict()
 
-            create_documents(org, tasks_dict, dones_dict, MONTH, name)
+            create_documents(org, tasks_dict, dones_dict, MONTH, name, YEAR)
 
 
 if __name__ == "__main__":

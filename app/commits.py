@@ -16,7 +16,7 @@ def _get_tasks_df(start, end, emp, author=None) -> pd.DataFrame:
             directory = os.path.join(path, service_dir)
             if directory:
                 repo = Repo(directory)
-                if service_dir == 'salary':
+                if service_dir == 'salary-back-front/salary':
                     branch = repo.heads.main
                 else:
                     branch = repo.active_branch

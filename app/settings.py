@@ -91,8 +91,8 @@ EMP_CREDS = {
 ORG_DIR_SERVICE = {
     'Kamil Taigunov': {
         'ГДД': [
-            # ['internal-client', 'Внутренний клиент'],
-            ['salary', 'Сервис расчета зарплаты'],
+            ['salary-back-front/internal-client', 'Внутренний клиент'],
+            ['salary-back-front/salary', 'Сервис расчета зарплаты'],
             ['dash', 'Сервис дашбордов'],
             ['defects', 'Сервис замены брака'],
             ['utils-library', 'Общая библиотека'],
@@ -146,5 +146,5 @@ BLACK_WORDS = [
 
 PERSONS = [
     # {"name": "Osip Sorokin", "email": "kim2337334@gmail.com"},
-    {"name": "Kamil Taigunov", "email": "jestenok@gmail.com"},
+    {"name": "Kamil Taigunov", "email": "jestenok1@gmail.com"},
 ]
